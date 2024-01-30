@@ -85,7 +85,7 @@ fields_pagination = {
 }
 model_pagination = api.model('Model_pagination', fields_pagination)
 
-@ns.route('/add')
+@ns_stock.route('/add')
 class Global_stocks(Resource):
     @auth_required 
     @api.expect(model, validate=True)
@@ -99,7 +99,7 @@ class Global_stocks(Resource):
             logging.error(e)
             return "K0", 400
 
-@ns.route('/search')
+@ns_stock.route('/search')
 class Search_stocks(Resource):
     @auth_required
     @api.marshal_with(model_pagination, envelope='resource')
