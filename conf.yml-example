@@ -1,0 +1,12 @@
+flask_settings:
+  SQLALCHEMY_DATABASE_URI: 'mysql://metrics:FIXME@mysql-server/metrics'
+
+api_key: "FIXME"
+
+flask_settings_dev:
+  DEBUG: True
+  SQLALCHEMY_TRACK_MODIFICATIONS: False
+
+flask_settings_prod:
+  DEBUG: False
+  SQLALCHEMY_TRACK_MODIFICATIONS: True
