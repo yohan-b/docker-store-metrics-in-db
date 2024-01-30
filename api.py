@@ -53,8 +53,8 @@ db = SQLAlchemy(app)
 api = Api(app, version='1.0', title='Store metrics in DB',
     description='API to record and access metrics.', authorizations=authorizations)
 
-ns = api.namespace('/stock', description='Stock API')
-ns = api.namespace('/electricity', description='Electricity API')
+ns_stock = api.namespace('stock/', description='Stock API')
+ns_electricity = api.namespace('electricity/', description='Electricity API')
 
 class Stock(db.Model):
     __tablename__ = "Stock"
@@ -128,7 +128,8 @@ class Search_stocks(Resource):
         logging.debug(result)
         return result
 
-api.add_namespace(ns)
+api.add_namespace(ns_stock)
+api.add_namespace(ns_electricity)
 db.create_all()
 migrate = Migrate(app, db, compare_type=True)
 
