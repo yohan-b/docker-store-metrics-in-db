@@ -60,7 +60,7 @@ ns_integer_metric = api.namespace('integer_metric/', description='Integer metric
 class Stock(db.Model):
     __tablename__ = "Stock"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.DateTime, index=True, nullable=False)
     price = db.Column(db.Float, nullable=False)
     volume = db.Column(db.Integer, nullable=False)
     metric = db.Column(db.String(10), index=True, nullable=False)
@@ -68,14 +68,14 @@ class Stock(db.Model):
 class Float_metric(db.Model):
     __tablename__ = "Float_metric"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.DateTime, index=True, nullable=False)
     value = db.Column(db.Float, nullable=False)
     metric = db.Column(db.String(50), index=True, nullable=False)
 
 class Integer_metric(db.Model):
     __tablename__ = "Integer_metric"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.DateTime, index=True, nullable=False)
     value = db.Column(db.Integer, nullable=False)
     metric = db.Column(db.String(50), index=True, nullable=False)
 
