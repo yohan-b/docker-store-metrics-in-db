@@ -70,14 +70,14 @@ class Float_metric(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time = db.Column(db.DateTime, nullable=False)
     value = db.Column(db.Float, nullable=False)
-    metric = db.Column(db.String(10), index=True, nullable=False)
+    metric = db.Column(db.String(50), index=True, nullable=False)
 
 class Integer_metric(db.Model):
     __tablename__ = "Integer_metric"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time = db.Column(db.DateTime, nullable=False)
     value = db.Column(db.Integer, nullable=False)
-    metric = db.Column(db.String(10), index=True, nullable=False)
+    metric = db.Column(db.String(50), index=True, nullable=False)
 
 Stock_resource_fields = {
     'time': fields.DateTime(dt_format='iso8601'),
@@ -213,6 +213,50 @@ class Search_float_metric(Resource):
                    pages=record_query.pages)
         logging.debug(result)
         return result
+
+@ns_integer_metric.route('/add')
+class Global_integer_metric(Resource):
+    @auth_required 
+    @api.expect(Integer_metric_model, validate=True)
+    def post(self):
+        try:
+            data = Integer_metric(**request.json)
+            db.session.add(data)
+            db.session.commit()
+            return "OK", 201
+        except Exception as e:
+            logging.error(e)
+            return "K0", 400
+
+@ns_integer_metric.route('/search')
+class Search_integer_metric(Resource):
+    @auth_required
+    @api.marshal_with(Integer_metric_model_pagination, envelope='resource')
+    def get(self):
+        logging.debug(json.loads(request.args.get("filter")))
+        page = request.args.get('page', default = 1, type = int)
+        filters = json.loads(request.args.get("filter", default = '*', type = str))
+        record_query = Integer_metric.query.filter()
+        for metric_filter in filters:
+            if 'name' in metric_filter.keys():
+                if metric_filter['name'] == 'metric':
+                    record_query = record_query.filter(Integer_metric.metric == metric_filter["val"])
+                if metric_filter['name'] in ['value', 'time']:
+                    if metric_filter['op'] == 'le':
+                        record_query = record_query.filter(getattr(Integer_metric, metric_filter['name']) <= metric_filter["val"])
+                    if metric_filter['op'] == 'ge':
+                        record_query = record_query.filter(getattr(Integer_metric, metric_filter['name']) >= metric_filter["val"])
+                    if metric_filter['op'] == 'eq':
+                        record_query = record_query.filter(getattr(Integer_metric, metric_filter['name']) == metric_filter["val"])
+                
+        record_query = record_query.paginate(page=page, per_page=20)
+        result = dict(datas=record_query.items, 
+                   total_results=record_query.total, 
+                   current_page=record_query.page,
+                   pages=record_query.pages)
+        logging.debug(result)
+        return result
+
 
 api.add_namespace(ns_stock)
 api.add_namespace(ns_float_metric)
