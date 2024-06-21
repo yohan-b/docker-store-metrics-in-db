@@ -2,7 +2,6 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 import json
 import logging
 import yaml
@@ -262,5 +261,4 @@ api.add_namespace(ns_stock)
 api.add_namespace(ns_float_metric)
 api.add_namespace(ns_integer_metric)
 db.create_all()
-migrate = Migrate(app, db, compare_type=True)
 
