@@ -19,7 +19,7 @@ authorizations = {
 }
 
 with open('./conf.yml') as conf:
-    yaml_conf = yaml.load(conf)
+    yaml_conf = yaml.safe_load(conf)
     flask_settings = yaml_conf.get("flask_settings")
     api_key = yaml_conf.get("api_key")
     if os.environ['FLASK_ENV'] == 'development':
