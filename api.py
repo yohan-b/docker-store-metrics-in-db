@@ -260,5 +260,6 @@ class Search_integer_metric(Resource):
 api.add_namespace(ns_stock)
 api.add_namespace(ns_float_metric)
 api.add_namespace(ns_integer_metric)
-db.create_all()
+with app.app_context():
+  db.create_all()
 
